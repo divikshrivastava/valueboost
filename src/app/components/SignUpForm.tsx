@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const SignUpForm = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -16,15 +18,18 @@ const SignUpForm = () => {
         }
 
         try {
-            const res = await fetch('/api/subscribe', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email }),
-            });
+            // const res = await fetch('/api/subscribe', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ email }),
+            // });
 
+            const res = {ok: true};
             if (res.ok) {
-                setMessage('Thank you for your interest! You will receive updates soon.');
-                setEmail('');
+                setMessage('Thank you for your interest! Redirecting...');
+                setTimeout(() => {
+                    router.push('/job-details');
+                }, 2000); // Redirect after 2 seconds
             } else {
                 setMessage('There was an issue submitting your request. Please try again.');
             }
@@ -34,7 +39,7 @@ const SignUpForm = () => {
     };
 
     return (
-        <div className="max-w-md mx-auto mt-8 p-6 bg-navy-blue text-white rounded-lg">
+        <div className="max-w-md mx-auto mt-8 p-6 bg-navy-blue rounded-lg">
             <h2 className="text-2xl mb-4">Stay Updated with ValueBoost</h2>
             <form onSubmit={handleSubmit}>
                 <input
@@ -42,7 +47,7 @@ const SignUpForm = () => {
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    className="w-full p-3 mb-4 border border-gray-300 rounded-md text-black"
                     required
                 />
                 <button type="submit" className="w-full p-3 bg-light-blue text-white rounded-md">
